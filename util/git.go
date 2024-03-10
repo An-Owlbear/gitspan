@@ -9,12 +9,14 @@ import (
 )
 
 // Retrieves the list of git repositories in a given directory
-func GetRepos(path string) []string {
-	dirs := getDirs(path)
+func GetRepos(path string, depth int) []string {
 	var repos []string
+	dirs := getDirs(path)
 	for _, e := range dirs {
 		if isGitRepo(e) {
 			repos = append(repos, e)
+		} else if depth != 0 {
+			repos = append(repos, GetRepos(e, depth-1)...)
 		}
 	}
 	return repos
